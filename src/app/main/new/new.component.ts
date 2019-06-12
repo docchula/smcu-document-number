@@ -19,7 +19,7 @@ export class NewComponent implements OnInit {
   params$: Observable<any>;
   year$: Observable<any>;
   category$: Observable<any>;
-  divisions: { name: string, value: number }[];
+  divisions$: Observable<{ name: string, value: number }[]>;
   form: FormGroup;
 
   constructor(
@@ -49,16 +49,8 @@ export class NewComponent implements OnInit {
     this.category$ = this.params$.pipe(switchMap((params) => {
       return this.afd.object(`data/categories/${params.category}`).valueChanges();
     }));
-    this.afd.list('data/divisions').valueChanges()
-      .pipe(map((divisions: any[]) => divisions.filter((division) => division.value !== 0)))
-      .subscribe(divisions => {
-        this.divisions = divisions;
-        // @todo Find better way to hook this into DOM rendering
-        setTimeout(() => {
-          // This needs to be called every time the select box updated.
-          M.FormSelect.init(document.querySelectorAll('select'), {});
-        }, 300);
-      });
+    this.divisions$ = this.afd.list('data/divisions').valueChanges()
+      .pipe(map((divisions: any[]) => divisions.filter((division) => division.value !== 0)));
     this.form = new FormGroup({
       name: new FormControl('', Validators.required),
       divisionId: new FormControl(1, Validators.required)

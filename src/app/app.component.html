@@ -1,7 +1,7 @@
 <div *ngIf="((user$ | async) || 1) as user">
   <nav class="green">
     <div class="nav-wrapper container">
-      <a [routerLink]="['/']" class="brand-logo">เอกสาร สพจ.</a>
+      <a [routerLink]="['/']" class="brand-logo">หนังสือ สพจ.</a>
       <a class="sidenav-trigger" data-target="sidenav" href="#"><i class="material-icons">menu</i></a>
       <ul class="right hide-on-med-and-down">
         <li *ngIf="user === 1"><a (click)="login()">Sign In</a></li>

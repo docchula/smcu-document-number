@@ -2,32 +2,33 @@
   <div *ngIf="year$ | async as year">
     <span *ngIf="category.name; then hasName; else noName"></span>
     <ng-template #hasName>
-      <h3>สร้างเอกสารประเภท{{category.name}} ปี พ.ศ. {{year.buddhist_year}}</h3>
+      <h3>ออกหนังสือใหม่ ประเภท{{category.name}} ปี พ.ศ. {{year.buddhist_year}}</h3>
     </ng-template>
     <ng-template #noName>
-      <h3>สร้างเอกสารปี พ.ศ. {{year.buddhist_year}}</h3>
+      <h3>ออกหนังสือใหม่ ปีพ.ศ. {{year.buddhist_year}}</h3>
     </ng-template>
     <div class="row">
       <div class="col s12 m8 offset-m2">
-        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <form [formGroup]="form" (ngSubmit)="submit()">
           <div class="row">
             <div class="input-field col s12">
-              <input id="name" type="text" class="validate" formControlName="name">
-              <label for="name">ชื่อเอกสาร</label>
+              <input id="name" type="text" class="validate" formControlName="name" required>
+              <label for="name">หัวเรื่อง</label>
+              <span class="helper-text">ในกรณีที่จะมีหนังสือหัวเรื่องเดียวกันหลายฉบับ ให้วงเล็บข้อมูลเพิ่มเติม เช่น ผู้รับ ไว้ด้วย</span>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s12">
-              <select formControlName="divisionId">
-                <option *ngFor="let division of divisions" [value]="division.value">{{division.name}}</option>
+              <select formControlName="divisionId" class="browser-default" required="">
+                <option *ngFor="let division of divisions$ | async" [value]="division.value">{{division.name}}</option>
               </select>
-              <label>หน่วยงาน</label>
+              <!--label>หน่วยงาน</label-->
             </div>
           </div>
           <div class="row">
             <div class="col s12">
               <button class="btn waves-effect waves-light" type="submit" [disabled]="form.disabled">
-                สร้างเลขเอกสารใหม่
+                สร้างเลขที่หนังสือใหม่
                 <i class="material-icons right">send</i>
               </button>
             </div>

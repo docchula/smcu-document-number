@@ -2,16 +2,16 @@
   <div *ngIf="year$ | async as year">
     <span *ngIf="category.name; then hasName; else noName"></span>
     <ng-template #hasName>
-      <h3>เอกสารประเภท{{category.name}} ปี พ.ศ. {{year.buddhist_year}}</h3>
+      <h3>หนังสือประเภท{{category.name}} ปี พ.ศ. {{year.buddhist_year}}</h3>
     </ng-template>
     <ng-template #noName>
-      <h3>เอกสารปี พ.ศ. {{year.buddhist_year}}</h3>
+      <h3>หนังสือออก ปีพ.ศ. {{year.buddhist_year}}</h3>
     </ng-template>
     <table class="striped">
       <thead>
         <tr>
           <th>ที่</th>
-          <th>ชื่อเอกสาร</th>
+          <th>หัวเรื่อง</th>
           <th>หน่วยงาน</th>
           <th>ผู้ขอ</th>
           <th>เวลา</th>
