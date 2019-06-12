@@ -7,33 +7,115 @@
     <ng-template #noName>
       <h3>ออกหนังสือใหม่ ปีพ.ศ. {{year.buddhist_year}}</h3>
     </ng-template>
-    <div class="row">
+    <div class="row" *ngIf="divisions$ | async as divisions">
       <div class="col s12 m8 offset-m2">
-        <form [formGroup]="form" (ngSubmit)="submit()">
-          <div class="row">
-            <div class="input-field col s12">
-              <input id="name" type="text" class="validate" formControlName="name" required>
-              <label for="name">หัวเรื่อง</label>
-              <span class="helper-text">ในกรณีที่จะมีหนังสือหัวเรื่องเดียวกันหลายฉบับ ให้วงเล็บข้อมูลเพิ่มเติม เช่น ผู้รับ ไว้ด้วย</span>
+
+        <ul class="collapsible">
+          <li>
+            <div class="collapsible-header"><i class="material-icons">playlist_play</i>ฉันร่างหนังสือไว้แล้ว ต้องการเพียงเลขที่หนังสือ</div>
+            <div class="collapsible-body">
+              <span>ท่านจะต้องร่างหนังสือไว้เสร็จเรียบร้อยแล้ว เหลือเพียงเลขหนังสือเท่านั้น จึงจะดำเนินการต่อ</span>
+              <form [formGroup]="numberForm" (ngSubmit)="submitNumber()">
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input id="name" type="text" class="validate" formControlName="name" required>
+                    <label for="name">หัวเรื่อง</label>
+                    <span class="helper-text">ในกรณีที่จะมีหนังสือหัวเรื่องเดียวกันหลายฉบับ ให้วงเล็บข้อมูลเพิ่มเติม เช่น ผู้รับ ไว้ด้วย</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col s12">
+                    <label>หน่วยงานที่ออกหนังสือ</label>
+                    <select formControlName="divisionId" class="browser-default" required="">
+                      <option *ngFor="let division of divisions" [value]="division.value">{{division.name}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col s12">
+                    <button class="btn waves-effect waves-light" type="submit" [disabled]="numberForm.disabled">
+                      สร้างเลขที่หนังสือใหม่
+                      <i class="material-icons right">send</i>
+                    </button>
+                  </div>
+                </div>
+              </form>
             </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s12">
-              <select formControlName="divisionId" class="browser-default" required="">
-                <option *ngFor="let division of divisions$ | async" [value]="division.value">{{division.name}}</option>
-              </select>
-              <!--label>หน่วยงาน</label-->
+          </li>
+          <li>
+            <div class="collapsible-header"><i class="material-icons">create</i>ฉันต้องการร่างหนังสือใหม่ โดยใช้แบบมาตรฐาน (beta)</div>
+            <div class="collapsible-body">
+              <form [formGroup]="docForm" (ngSubmit)="submitDoc()">
+                <div class="row">
+                  <div class="col s12">
+                    <label>หน่วยงานที่ออกหนังสือ</label>
+                    <select formControlName="divisionId" class="browser-default" required="">
+                      <option *ngFor="let division of divisions" [value]="division.value">{{division.name}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input id="gName" type="text" class="validate" formControlName="name" required>
+                    <label for="gName">หัวเรื่อง</label>
+                    <span class="helper-text">เรื่องย่อที่เป็นใจความที่สั้นที่สุดของหนังสือฉบับนี้</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input id="gTo" type="text" class="validate" formControlName="to" required>
+                    <label for="gTo">ถึง</label>
+                    <span class="helper-text">ผู้รับ โดยปกติคือตำแหน่งของหัวหน้าหน่วยงานที่ต้องการแจ้ง</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col s12">
+                    <p>
+                      <label>
+                        <input type="checkbox" checked="checked" value="in" formControlName="insideTo" />
+                        <span>ผู้รับเป็นอาจารย์ในจุฬาลงกรณ์มหาวิทยาลัย (ลงท้าย "ด้วยความเคารพอย่างสูง")</span>
+                      </label>
+                    </p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input id="gAttachment" type="text" class="validate" formControlName="attachment">
+                    <label for="gAttachment">สิ่งที่ส่งมาด้วย</label>
+                    <span class="helper-text">หากไม่มีให้เว้นว่าง</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <textarea id="gParagraph1" class="materialize-textarea" formControlName="paragraph_1">ด้วย...</textarea>
+                    <label for="gParagraph1">ย่อหน้า 1: เหตุ</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <textarea id="gParagraph2" class="materialize-textarea" formControlName="paragraph_2">ในการนี้...</textarea>
+                    <label for="gParagraph2">ย่อหน้า 2: ความประสงค์</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input id="gParagraph3" type="text" class="validate autocomplete" formControlName="paragraph_3" value="จึงเรียนมาเพื่อ..."/>
+                    <label for="gParagraph3">ย่อหน้า 3: สรุปความประสงค์</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col s12">
+                    <button class="btn waves-effect waves-light blue" type="submit" [disabled]="docForm.disabled">
+                      สร้างไฟล์หนังสือ
+                      <i class="material-icons right">save</i>
+                    </button>
+                  </div>
+                </div>
+              </form>
             </div>
-          </div>
-          <div class="row">
-            <div class="col s12">
-              <button class="btn waves-effect waves-light" type="submit" [disabled]="form.disabled">
-                สร้างเลขที่หนังสือใหม่
-                <i class="material-icons right">send</i>
-              </button>
-            </div>
-          </div>
-        </form>
+          </li>
+        </ul>
+
       </div>
     </div>
   </div>

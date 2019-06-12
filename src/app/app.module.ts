@@ -7,11 +7,13 @@ import { AppComponent } from './app.component';
 import { UserGuard } from './user.guard';
 import { NoUserGuard } from './no-user.guard';
 import { HomeComponent } from './home/home.component';
+import { ThaiDatePipe } from './thai-date.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    ThaiDatePipe
   ],
   imports: [
     BrowserModule,
