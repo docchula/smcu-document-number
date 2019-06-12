@@ -21,15 +21,15 @@
         <tr *ngFor="let document of documents$ | async as documents">
           <span *ngIf="category.prefix; then hasPrefix; else noPrefix"></span>
           <ng-template #hasPrefix>
-            <td>{{category.prefix}} {{document.number}}/{{year.buddhist_year}}</td>
+            <td>{{category.prefix}} {{document.number}}<sub>/{{year.buddhist_year}}</sub></td>
           </ng-template>
           <ng-template #noPrefix>
-            <td>{{document.number}}/{{year.buddhist_year}}</td>
+            <td>{{document.number}}<sub>/{{year.buddhist_year}}</sub></td>
           </ng-template>
           <td>{{document.name}}</td>
           <td>{{document.division.name}}</td>
           <td>{{document.user.profile.displayName}}</td>
-          <td>{{document.timestamp | time}}</td>
+          <td>{{document.timestamp | date:"d MMMM y, HH:mm"}}</td>
         </tr>
       </tbody>
     </table>
