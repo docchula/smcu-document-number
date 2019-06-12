@@ -8,24 +8,29 @@
       <h3>สร้างเอกสารปี พ.ศ. {{year.buddhist_year}}</h3>
     </ng-template>
     <div class="row">
-      <div class="col s6 offset-s3">
-        <form [formGroup]="form" materialize (ngSubmit)="submit()" novalidate>
+      <div class="col s12 m8 offset-m2">
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
           <div class="row">
             <div class="input-field col s12">
               <input id="name" type="text" class="validate" formControlName="name">
               <label for="name">ชื่อเอกสาร</label>
             </div>
           </div>
-          <div class="input-field col s12">
-            <select materialize="material_select" formControlName="divisionId">
-              <option *ngFor="let division of divisions$ | async as divisions" [value]="division.value">{{division.name}}</option>
-            </select>
-            <label>หน่วยงาน</label>
+          <div class="row">
+            <div class="input-field col s12">
+              <select formControlName="divisionId">
+                <option *ngFor="let division of divisions" [value]="division.value">{{division.name}}</option>
+              </select>
+              <label>หน่วยงาน</label>
+            </div>
           </div>
-          <div class="col s12">
-            <button class="btn waves-effect waves-light" type="submit" [disabled]="form.disabled">Submit
-              <i class="material-icons right">send</i>
-            </button>
+          <div class="row">
+            <div class="col s12">
+              <button class="btn waves-effect waves-light" type="submit" [disabled]="form.disabled">
+                สร้างเลขเอกสารใหม่
+                <i class="material-icons right">send</i>
+              </button>
+            </div>
           </div>
         </form>
       </div>

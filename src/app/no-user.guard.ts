@@ -1,14 +1,14 @@
-import { AngularFireAuth } from 'angularfire2/auth';
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, CanLoad, Route, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/first';
+import {Injectable} from '@angular/core';
+import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, CanLoad, Route, Router} from '@angular/router';
+import {AngularFireAuth} from '@angular/fire/auth';
+import {Observable} from 'rxjs';
+import {first, map} from 'rxjs/operators';
 
 @Injectable()
 export class NoUserGuard implements CanActivate, CanLoad {
 
-  constructor(private afa: AngularFireAuth, private router: Router) { }
+  constructor(private afa: AngularFireAuth, private router: Router) {
+  }
 
   canActivate(
     next: ActivatedRouteSnapshot,
@@ -23,13 +23,13 @@ export class NoUserGuard implements CanActivate, CanLoad {
   }
 
   userExist() {
-    return this.afa.authState.first().map((authState) => {
+    return this.afa.authState.pipe(first()).pipe(map((authState) => {
       if (!authState) {
         return true;
       } else {
         this.router.navigate(['/', 'main']);
         return false;
       }
-    });
+    }));
   }
 }

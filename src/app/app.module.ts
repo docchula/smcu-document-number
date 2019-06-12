@@ -7,7 +7,6 @@ import { AppComponent } from './app.component';
 import { UserGuard } from './user.guard';
 import { NoUserGuard } from './no-user.guard';
 import { HomeComponent } from './home/home.component';
-import { MaterializeModule } from 'angular2-materialize';
 
 @NgModule({
   declarations: [
@@ -18,7 +17,6 @@ import { MaterializeModule } from 'angular2-materialize';
     BrowserModule,
     AppRoutingModule,
     CoreModule,
-    MaterializeModule
   ],
   providers: [UserGuard, NoUserGuard],
   bootstrap: [AppComponent]

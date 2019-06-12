@@ -1,8 +1,10 @@
 import { AuthService } from './core/auth.service';
-import { AngularFireAuth } from 'angularfire2/auth';
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import * as firebase from 'firebase/app';
+import {AngularFireAuth} from '@angular/fire/auth';
+import {Observable} from 'rxjs';
+
+declare var M: any;
 
 @Component({
   selector: 'smcu-root',
@@ -19,6 +21,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.user$ = this.afa.authState;
+    M.Sidenav.init(document.getElementById('sidenav'), {});
   }
 
   login() {

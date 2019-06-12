@@ -1,12 +1,9 @@
-import { AngularFireDatabase } from 'angularfire2/database';
-import { AngularFireAuth } from 'angularfire2/auth';
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, CanLoad, Route, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/map';
+import {AngularFireAuth} from '@angular/fire/auth';
+import {AngularFireDatabase} from '@angular/fire/database';
+import {Observable, of} from 'rxjs';
+import {first, map, switchMap} from 'rxjs/operators';
 
 @Injectable()
 export class UserGuard implements CanActivate, CanLoad {
@@ -26,10 +23,10 @@ export class UserGuard implements CanActivate, CanLoad {
   }
 
   userExist() {
-    return this.afa.authState.first().switchMap((authState) => {
+    return this.afa.authState.pipe(first()).pipe(switchMap((authState) => {
       if (authState) {
-        return this.afd.object(`data/users/${authState.uid}/profile`).first().map((data) => {
-          if (!data.$exists()) {
+        return this.afd.object(`data/users/${authState.uid}aa/profile`).valueChanges().pipe(first()).pipe(map((data) => {
+          if (!data) {
             this.afd.database.ref(`data/users/${authState.uid}/profile`).set({
               displayName: authState.displayName,
               uid: authState.uid,
@@ -37,11 +34,11 @@ export class UserGuard implements CanActivate, CanLoad {
             });
           }
           return true;
-        });
+        }));
       } else {
         this.router.navigate(['/']);
-        return Observable.of(false);
+        return of(false);
       }
-    });
+    }));
   }
 }

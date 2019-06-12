@@ -24,6 +24,7 @@
     "core-js": "2.6.9",
     "firebase": "6.1.1",
     "font-awesome": "4.7.0",
+    "materialize-css": "^1.0.0",
     "moment": "2.24.0",
     "moment-timezone": "0.5.25",
     "rxjs": "6.5.2",
