@@ -1,1 +1,21 @@
+html {
+  font-family: 'Sarabun', serif !important;
+  font-weight: 300;
+  font-size: 16px;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+button {
+  font-family: 'Sarabun', serif;
+}
+
+h1, h2, h3, h4, h5 {
+  font-weight: 400;
+}
+
+strong, b, h6, th, .bold {
+  font-weight: 500;
+}
 
