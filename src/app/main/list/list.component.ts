@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewChecked, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AngularFireDatabase} from '@angular/fire/database';
 import {Observable, ReplaySubject} from 'rxjs';
@@ -11,7 +11,7 @@ declare var M: any;
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, AfterViewChecked {
 
   params$: ReplaySubject<[string, string]>;
   documents$: Observable<any[]>;
@@ -22,8 +22,6 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit() {
-    M.FloatingActionButton.init(document.querySelectorAll('.fixed-action-btn'), {});
-
     this.params$ = new ReplaySubject<[string, string]>();
     this.route.params.subscribe((params) => {
       if (params.year) {
@@ -68,4 +66,7 @@ export class ListComponent implements OnInit {
     }));
   }
 
+  ngAfterViewChecked(): void {
+    M.FloatingActionButton.init(document.querySelectorAll('.fixed-action-btn'), {});
+  }
 }

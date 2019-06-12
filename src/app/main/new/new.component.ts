@@ -8,8 +8,7 @@ import {HttpClient} from '@angular/common/http';
 import {combineLatest, Observable} from 'rxjs';
 import {first, map, switchMap} from 'rxjs/operators';
 import * as Docxtemplater from 'docxtemplater';
-import { saveAs } from 'file-saver';
-import * as moment from 'moment';
+import {saveAs} from 'file-saver';
 import {ThaiDatePipe} from '../../thai-date.pipe';
 
 declare var M: any;
@@ -70,7 +69,11 @@ export class NewComponent implements OnInit, AfterViewChecked {
       attachment: new FormControl(''),
       paragraph_1: new FormControl('', Validators.required),
       paragraph_2: new FormControl('', Validators.required),
-      paragraph_3: new FormControl('', Validators.required)
+      paragraph_3: new FormControl('', Validators.required),
+      signer_1: new FormControl(''),
+      signer_2: new FormControl(''),
+      signer_3: new FormControl(''),
+      hasAssocSign: new FormControl('')
     });
   }
 
@@ -119,8 +122,11 @@ export class NewComponent implements OnInit, AfterViewChecked {
           });
         });
       });*/
-      JSZipUtils.getBinaryContent('/assets/template-in.docx', (error,content) => {
-        if (error) { throw error };
+      JSZipUtils.getBinaryContent('/assets/template-in.docx', (error, content) => {
+        if (error) {
+          throw error;
+        }
+        ;
         const zip = new JSZip(content);
         const doc = new Docxtemplater();
         doc.loadZip(zip);
@@ -134,21 +140,23 @@ export class NewComponent implements OnInit, AfterViewChecked {
         });
         try {
           // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
-          doc.render()
+          doc.render();
         } catch (error) {
-          console.log(JSON.stringify({error: {
+          console.log(JSON.stringify({
+            error: {
               message: error.message,
               name: error.name,
               stack: error.stack,
-              properties: error.properties,
-            }}));
+              properties: error.properties
+            }
+          }));
           throw error;
         }
         const out = doc.getZip().generate({
           type: 'blob',
           mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         });
-        saveAs(out, 'output.docx')
+        saveAs(out, 'output.docx');
       });
     }
   }

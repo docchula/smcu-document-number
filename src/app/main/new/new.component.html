@@ -2,10 +2,10 @@
   <div *ngIf="year$ | async as year">
     <span *ngIf="category.name; then hasName; else noName"></span>
     <ng-template #hasName>
-      <h3>ออกหนังสือใหม่ ประเภท{{category.name}} ปี พ.ศ. {{year.buddhist_year}}</h3>
+      <h4>ออกหนังสือใหม่ ประเภท{{category.name}} ปี พ.ศ. {{year.buddhist_year}}</h4>
     </ng-template>
     <ng-template #noName>
-      <h3>ออกหนังสือใหม่ ปีพ.ศ. {{year.buddhist_year}}</h3>
+      <h4>ออกหนังสือใหม่ ปีพ.ศ. {{year.buddhist_year}}</h4>
     </ng-template>
     <div class="row" *ngIf="divisions$ | async as divisions">
       <div class="col s12 m8 offset-m2">
@@ -29,6 +29,17 @@
                     <select formControlName="divisionId" class="browser-default" required="">
                       <option *ngFor="let division of divisions" [value]="division.value">{{division.name}}</option>
                     </select>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col s12 file-field input-field">
+                    <div class="btn">
+                      <span>File</span>
+                      <input type="file">
+                    </div>
+                    <div class="file-path-wrapper">
+                      <input class="file-path validate" type="text" placeholder="อัพโหลดไฟล์เอกสาร (.docx/.pdf)">
+                    </div>
                   </div>
                 </div>
                 <div class="row">
@@ -72,7 +83,7 @@
                   <div class="col s12">
                     <p>
                       <label>
-                        <input type="checkbox" checked="checked" value="in" formControlName="insideTo" />
+                        <input type="checkbox" checked="checked" value="in" formControlName="insideTo"/>
                         <span>ผู้รับเป็นอาจารย์ในจุฬาลงกรณ์มหาวิทยาลัย (ลงท้าย "ด้วยความเคารพอย่างสูง")</span>
                       </label>
                     </p>
@@ -87,20 +98,20 @@
                 </div>
                 <div class="row">
                   <div class="input-field col s12">
-                    <textarea id="gParagraph1" class="materialize-textarea" formControlName="paragraph_1">ด้วย...</textarea>
-                    <label for="gParagraph1">ย่อหน้า 1: เหตุ</label>
+                    <textarea id="gParagraph1" class="materialize-textarea" formControlName="paragraph_1"></textarea>
+                    <label for="gParagraph1">ย่อหน้า 1: เหตุ (ด้วย...)</label>
                   </div>
                 </div>
                 <div class="row">
                   <div class="input-field col s12">
-                    <textarea id="gParagraph2" class="materialize-textarea" formControlName="paragraph_2">ในการนี้...</textarea>
-                    <label for="gParagraph2">ย่อหน้า 2: ความประสงค์</label>
+                    <textarea id="gParagraph2" class="materialize-textarea" formControlName="paragraph_2"></textarea>
+                    <label for="gParagraph2">ย่อหน้า 2: ความประสงค์ (ในการนี้...)</label>
                   </div>
                 </div>
                 <div class="row">
                   <div class="input-field col s12">
-                    <input id="gParagraph3" type="text" class="validate autocomplete" formControlName="paragraph_3" value="จึงเรียนมาเพื่อ..."/>
-                    <label for="gParagraph3">ย่อหน้า 3: สรุปความประสงค์</label>
+                    <input id="gParagraph3" type="text" class="validate autocomplete" formControlName="paragraph_3" />
+                    <label for="gParagraph3">ย่อหน้า 3: สรุปความประสงค์ (จึงเรียนมาเพื่อ...)</label>
                   </div>
                 </div>
                 <div class="row">
