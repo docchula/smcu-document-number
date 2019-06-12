@@ -4,6 +4,8 @@ import {AngularFireDatabase} from '@angular/fire/database';
 import {Observable, ReplaySubject} from 'rxjs';
 import {first, map, switchMap} from 'rxjs/operators';
 
+declare var M: any;
+
 @Component({
   selector: 'smcu-list',
   templateUrl: './list.component.html',
@@ -20,6 +22,8 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit() {
+    M.FloatingActionButton.init(document.querySelectorAll('.fixed-action-btn'), {});
+
     this.params$ = new ReplaySubject<[string, string]>();
     this.route.params.subscribe((params) => {
       if (params.year) {

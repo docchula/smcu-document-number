@@ -7,8 +7,7 @@
     <ng-template #noName>
       <h3>เอกสารปี พ.ศ. {{year.buddhist_year}}</h3>
     </ng-template>
-    <a class="waves-effect waves-light btn" [routerLink]="['new']">สร้างเอกสารใหม่</a>
-    <table class="responsive-table stripped">
+    <table class="striped">
       <thead>
         <tr>
           <th>ที่</th>
@@ -34,5 +33,10 @@
         </tr>
       </tbody>
     </table>
+    <div class="fixed-action-btn">
+      <a class="btn-floating btn-large blue" [routerLink]="['new']">
+        <i class="large material-icons">add</i>
+      </a>
+    </div>
   </div>
 </div>
