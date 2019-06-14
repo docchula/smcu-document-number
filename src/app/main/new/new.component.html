@@ -26,7 +26,7 @@
                 <div class="row">
                   <div class="col s12">
                     <label>หน่วยงานที่ออกหนังสือ</label>
-                    <select formControlName="divisionId" class="browser-default" required="">
+                    <select formControlName="divisionId">
                       <option *ngFor="let division of divisions" [value]="division.value">{{division.name}}</option>
                     </select>
                   </div>
@@ -60,7 +60,7 @@
                 <div class="row">
                   <div class="col s12">
                     <label>หน่วยงานที่ออกหนังสือ</label>
-                    <select formControlName="divisionId" class="browser-default" required="">
+                    <select formControlName="divisionId" required>
                       <option *ngFor="let division of divisions" [value]="division.value">{{division.name}}</option>
                     </select>
                   </div>
@@ -112,6 +112,14 @@
                   <div class="input-field col s12">
                     <input id="gParagraph3" type="text" class="validate autocomplete" formControlName="paragraph_3" />
                     <label for="gParagraph3">ย่อหน้า 3: สรุปความประสงค์ (จึงเรียนมาเพื่อ...)</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col s12">
+                    <label>ผู้ลงนาม 1</label>
+                    <select formControlName="divisionId" required>
+                      <option *ngFor="let person of signers$[0] | async" [value]="person.name" [attr.data-icon]="person.picture_url">{{person.title}}</option>
+                    </select>
                   </div>
                 </div>
                 <div class="row">

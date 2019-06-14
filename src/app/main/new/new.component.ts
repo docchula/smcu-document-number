@@ -6,12 +6,12 @@ import {AngularFireDatabase} from '@angular/fire/database';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {HttpClient} from '@angular/common/http';
 import {combineLatest, Observable} from 'rxjs';
-import {first, map, switchMap} from 'rxjs/operators';
+import {first, map, switchMap, tap} from 'rxjs/operators';
 import * as Docxtemplater from 'docxtemplater';
 import {saveAs} from 'file-saver';
 import {ThaiDatePipe} from '../../thai-date.pipe';
+import * as M from 'materialize-css';
 
-declare var M: any;
 declare var JSZip: any;
 declare var JSZipUtils: any;
 
@@ -25,6 +25,7 @@ export class NewComponent implements OnInit, AfterViewChecked {
   year$: Observable<any>;
   category$: Observable<any>;
   divisions$: Observable<{ name: string, value: number }[]>;
+  signers$: Observable<any>[] = [];
   numberForm: FormGroup;
   docForm: FormGroup;
 
@@ -57,6 +58,9 @@ export class NewComponent implements OnInit, AfterViewChecked {
     }));
     this.divisions$ = this.afd.list('data/divisions').valueChanges()
       .pipe(map((divisions: any[]) => divisions.filter((division) => division.value !== 0)));
+    [1, 2, 3].forEach(num => {
+      this.signers$.push(this.afd.list(`data/signers/level_${num}`).valueChanges().pipe(first()));
+    });
     this.numberForm = new FormGroup({
       name: new FormControl('', Validators.required),
       divisionId: new FormControl(1, Validators.required)
@@ -75,10 +79,17 @@ export class NewComponent implements OnInit, AfterViewChecked {
       signer_3: new FormControl(''),
       hasAssocSign: new FormControl('')
     });
+    this.signers$.forEach(s => {
+      s.subscribe(d => {
+        M.FormSelect.init(document.querySelectorAll('select'), {});
+      })
+    })
   }
 
   ngAfterViewChecked(): void {
+    console.log('AfterViewChecked');
     M.Collapsible.init(document.querySelectorAll('.collapsible'), {});
+    M.FormSelect.init(document.querySelectorAll('select'), {});
   }
 
   submitNumber() {
