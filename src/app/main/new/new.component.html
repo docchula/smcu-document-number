@@ -110,16 +110,34 @@
                 </div>
                 <div class="row">
                   <div class="input-field col s12">
-                    <input id="gParagraph3" type="text" class="validate autocomplete" formControlName="paragraph_3" />
+                    <input id="gParagraph3" type="text" class="validate autocomplete" formControlName="paragraph_3"/>
                     <label for="gParagraph3">ย่อหน้า 3: สรุปความประสงค์ (จึงเรียนมาเพื่อ...)</label>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col s12">
-                    <label>ผู้ลงนาม 1</label>
-                    <select formControlName="divisionId" required>
-                      <option *ngFor="let person of signers$[0] | async" [value]="person.name" [attr.data-icon]="person.picture_url">{{person.title}}</option>
+                  <div class="col s12 input-field">
+                    <select formControlName="signer_1" required>
+                      <option value="skip">(ข้าม)</option>
+                      <option *ngFor="let person of signers[1]" [value]="person.name+'/'+person.title" [attr.data-icon]="person.picture_url">{{person.title}}</option>
                     </select>
+                    <label>ผู้ลงนาม 1</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col s12 input-field">
+                    <select formControlName="signer_2" required>
+                      <option value="skip">(ข้าม)</option>
+                      <option *ngFor="let person of signers[2]" [value]="person.name+'/'+person.title" [attr.data-icon]="person.picture_url">{{person.title}}</option>
+                    </select>
+                    <label>ผู้ลงนาม 2</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col s12 input-field">
+                    <select formControlName="signer_3" required [selectedIndex]="0">
+                      <option *ngFor="let person of signers[3]" [value]="person.name+'/'+person.title" [attr.data-icon]="person.picture_url">{{person.title}}</option>
+                    </select>
+                    <label>ผู้ลงนาม 3</label>
                   </div>
                 </div>
                 <div class="row">
