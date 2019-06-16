@@ -1,7 +1,7 @@
 {
   "rules": {
-    ".read": "auth != null",
-    ".write": "auth != null",
+    ".read": "auth != null && auth.token.email.endsWith('@docchula.com')",
+    ".write": "auth != null && auth.token.email.endsWith('@docchula.com')",
     "data": {
       "documents": {
         "$year": {

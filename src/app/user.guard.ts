@@ -24,8 +24,8 @@ export class UserGuard implements CanActivate, CanLoad {
 
   userExist() {
     return this.afa.authState.pipe(first()).pipe(switchMap((authState) => {
-      if (authState) {
-        return this.afd.object(`data/users/${authState.uid}aa/profile`).valueChanges().pipe(first()).pipe(map((data) => {
+      if (authState && authState.email.endsWith('docchula.com')) {
+        return this.afd.object(`data/users/${authState.uid}/profile`).valueChanges().pipe(first()).pipe(map((data) => {
           if (!data) {
             this.afd.database.ref(`data/users/${authState.uid}/profile`).set({
               displayName: authState.displayName,
