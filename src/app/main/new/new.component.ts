@@ -25,7 +25,7 @@ export class NewComponent implements OnInit, AfterViewChecked {
   year$: Observable<any>;
   category$: Observable<any>;
   divisions$: Observable<{ name: string, value: number }[]>;
-  signers: { name: string, title: string, picture_url: string | null }[][] = [];
+  signers: { name: string, title: string, picture_url: string | null }[][] = [[], [], [], []];
   initializedSignerSelect: boolean;
   numberForm: FormGroup;
   docForm: FormGroup;
@@ -74,7 +74,7 @@ export class NewComponent implements OnInit, AfterViewChecked {
       name: new FormControl('', Validators.required),
       divisionId: new FormControl('', Validators.required),
       to: new FormControl('', Validators.required),
-      insideTo: new FormControl(),
+      insideTo: new FormControl(true),
       attachment: new FormControl(''),
       paragraph_1: new FormControl('', Validators.required),
       paragraph_2: new FormControl('', Validators.required),
@@ -82,16 +82,26 @@ export class NewComponent implements OnInit, AfterViewChecked {
       signer_1: new FormControl('', Validators.required),
       signer_2: new FormControl('', Validators.required),
       signer_3: new FormControl('', Validators.required),
-      hasAssocSign: new FormControl('')
+      contact_name: new FormControl('', Validators.required),
+      contact_phone: new FormControl('', Validators.required),
+      hasAssocSign: new FormControl(false),
+      wantIssue: new FormControl({value: false, disabled: true})
     });
   }
 
   ngAfterViewChecked(): void {
     M.Collapsible.init(document.querySelectorAll('.collapsible'), {});
-    if (this.signers[1] && this.signers[2] && this.signers[3] && !this.initializedSignerSelect) {
+    if (this.signers[1].length && this.signers[2].length && this.signers[3].length && !this.initializedSignerSelect) {
       setTimeout(_ => {
         M.FormSelect.init(document.querySelectorAll('select'), {});
-      }, 800);
+        M.Autocomplete.init(document.getElementById('gTo'), {
+          data: {
+            'รองคณบดีฝ่ายกิจการนิสิต': 'https://firebasestorage.googleapis.com/v0/b/smcu-document-number.appspot.com/o/board-face%2Fpongsak.jpg?alt=media&token=20b6b894-989e-42d0-98d7-d4585bc7ddd2',
+            'รองคณบดีฝ่ายบริหาร': null,
+            'รองผู้อำนวยการโรงพยาบาลจุฬาลงกรณ์ ฝ่ายกายภาพ': null
+          }
+        });
+      }, 1000);
       this.initializedSignerSelect = true;
     }
   }
@@ -118,8 +128,12 @@ export class NewComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  submitDoc() {
-    console.log(this.docForm.value);
+  async submitDoc() {
+    // Cannot add associate dean's field if the recipient is himself
+    if (this.docForm.value.hasAssocSign && this.docForm.value.to === 'รองคณบดีฝ่ายกิจการนิสิต') {
+      this.docForm.patchValue({hasAssocSign: false});
+    }
+
     if (this.docForm.valid) {
       this.docForm.disable();
 
@@ -149,6 +163,7 @@ export class NewComponent implements OnInit, AfterViewChecked {
           });
         });
       });*/
+
       JSZipUtils.getBinaryContent('/assets/template-in.docx', (error, content) => {
         if (error) {
           throw error;
@@ -159,13 +174,14 @@ export class NewComponent implements OnInit, AfterViewChecked {
         doc.setOptions({linebreaks: true});
         doc.setData({
           ...this.docForm.value,
+          number: '     /',
           date: (new ThaiDatePipe()).transform(new Date(), 'medium'),
-          close: (this.docForm.value.insideTo === 'in') ? 'ด้วยความเคารพอย่างสูง' : 'ขอแสดงความนับถือ',
-          signer_1_name: signers[0] ? signers[0].name : '',
+          close: this.docForm.value.insideTo ? 'ด้วยความเคารพอย่างสูง' : 'ขอแสดงความนับถือ',
+          signer_1_name: signers[0] ? ('(' + signers[0].name + ')') : '',
           signer_1_title: signers[0] ? signers[0].title : '',
-          signer_2_name: signers[1] ? signers[1].name : '',
+          signer_2_name: signers[1] ? ('(' + signers[1].name + ')') : '',
           signer_2_title: signers[1] ? signers[1].title : '',
-          signer_3_name: signers[2] ? signers[2].name : '',
+          signer_3_name: signers[2] ? ('(' + signers[2].name + ')') : '',
           signer_3_title: signers[2] ? signers[2].title : ''
         });
         try {
