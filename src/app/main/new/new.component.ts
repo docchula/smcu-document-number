@@ -29,6 +29,7 @@ export class NewComponent implements OnInit, AfterViewChecked {
   initializedSignerSelect: boolean;
   numberForm: FormGroup;
   docForm: FormGroup;
+  authState: firebase.User;
 
   constructor(
     private route: ActivatedRoute,
@@ -72,7 +73,7 @@ export class NewComponent implements OnInit, AfterViewChecked {
     });
     this.docForm = new FormGroup({
       name: new FormControl('', Validators.required),
-      divisionId: new FormControl('', Validators.required),
+      // divisionId: new FormControl('', Validators.required),
       to: new FormControl('', Validators.required),
       insideTo: new FormControl(true),
       attachment: new FormControl(''),
@@ -87,12 +88,32 @@ export class NewComponent implements OnInit, AfterViewChecked {
       hasAssocSign: new FormControl(false),
       wantIssue: new FormControl({value: false, disabled: true})
     });
+    this.afa.authState.pipe(first()).subscribe((authState) => {
+      if (authState) {
+        this.afd.object<{
+          displayName: string,
+          uid: string,
+          email: string,
+          fullName: string | null,
+          phone: string | null
+        }>(`data/users/${authState.uid}/profile`).valueChanges().pipe(first()).subscribe((data) => {
+          if (data && data.fullName) {
+            this.docForm.patchValue({
+              contact_name: data.fullName,
+              contact_phone: data.phone
+            });
+          } else {
+            this.authState = authState;
+          }
+        });
+      }
+    });
   }
 
   ngAfterViewChecked(): void {
     M.Collapsible.init(document.querySelectorAll('.collapsible'), {});
     if (this.signers[1].length && this.signers[2].length && this.signers[3].length && !this.initializedSignerSelect) {
-      setTimeout(_ => {
+      setTimeout(() => {
         M.FormSelect.init(document.querySelectorAll('select'), {});
         M.Autocomplete.init(document.getElementById('gTo'), {
           data: {
@@ -205,6 +226,13 @@ export class NewComponent implements OnInit, AfterViewChecked {
         });
         saveAs(out, 'output.docx');
       });
+
+      if (this.authState) {
+        this.afd.database.ref(`data/users/${this.authState.uid}/profile`).update({
+          fullName: this.docForm.value.contact_name,
+          phone: this.docForm.value.contact_phone
+        });
+      }
     }
   }
 

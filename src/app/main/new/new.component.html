@@ -8,7 +8,7 @@
       <h4>ออกหนังสือใหม่ ปีพ.ศ. {{year.buddhist_year}}</h4>
     </ng-template>
     <div class="row" *ngIf="divisions$ | async as divisions">
-      <div class="col s12 m8 offset-m2">
+      <div class="col s12 m10 offset-m1">
 
         <ul class="collapsible">
           <li>
@@ -56,16 +56,16 @@
           <li>
             <div class="collapsible-header"><i class="material-icons">create</i>ฉันต้องการร่างหนังสือใหม่ โดยใช้แบบมาตรฐาน (beta)</div>
             <div class="collapsible-body">
-              <span>ในขณะนี้ ระบบสามารถสร้างหนังสือที่ใช้รูปแบบมาตรฐาน (3 ย่อหน้า) เท่านั้น และยังไม่สามารถออกเลขหนังสือสพจ. พร้อมกันได้</span>
+              <span>ในขณะนี้ ระบบสามารถสร้างหนังสือที่ใช้รูปแบบมาตรฐาน (3 ย่อหน้า) เท่านั้น และยังไม่สามารถออกเลขหนังสือสพจ. พร้อมกันได้ เมื่อสร้างไฟล์เอกสารขึ้นมาแล้ว ให้ปรับแก้ไขตามความเหมาะสม แล้วจึงขอเลขที่หนังสือผ่านเว็บไซต์นี้อีกครั้ง</span>
               <form [formGroup]="docForm" (ngSubmit)="submitDoc()">
-                <div class="row">
+                <!--div class="row">
                   <div class="col s12">
                     <label>หน่วยงานที่ออกหนังสือ</label>
                     <select formControlName="divisionId" required>
                       <option *ngFor="let division of divisions" [value]="division.value">{{division.name}}</option>
                     </select>
                   </div>
-                </div>
+                </div-->
                 <div class="row">
                   <div class="input-field col s12">
                     <input id="gName" type="text" class="validate" formControlName="name" required>
