@@ -135,7 +135,7 @@ export class NewComponent implements OnInit, AfterViewChecked {
     }
 
     if (this.docForm.valid) {
-      this.docForm.disable();
+      // this.docForm.disable();
 
       // Build an array of signers' info
       const signers = [];
@@ -164,7 +164,7 @@ export class NewComponent implements OnInit, AfterViewChecked {
         });
       });*/
 
-      JSZipUtils.getBinaryContent('/assets/template-in.docx', (error, content) => {
+      JSZipUtils.getBinaryContent('/assets/template.docx', (error, content) => {
         if (error) {
           throw error;
         }
@@ -174,6 +174,7 @@ export class NewComponent implements OnInit, AfterViewChecked {
         doc.setOptions({linebreaks: true});
         doc.setData({
           ...this.docForm.value,
+          noAssocSign: !this.docForm.value.hasAssocSign,
           number: '     /',
           date: (new ThaiDatePipe()).transform(new Date(), 'medium'),
           close: this.docForm.value.insideTo ? 'ด้วยความเคารพอย่างสูง' : 'ขอแสดงความนับถือ',
