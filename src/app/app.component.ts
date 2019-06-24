@@ -3,15 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import * as firebase from 'firebase/app';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {Observable} from 'rxjs';
-
-declare var M: any;
+import * as M from 'materialize-css';
 
 @Component({
   selector: 'smcu-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   user$: Observable<firebase.User>;
 
   constructor(
@@ -21,7 +20,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.user$ = this.afa.authState;
-    M.Sidenav.init(document.getElementById('sidenav'), {});
+  }
+
+  ngAfterViewInit(): void {
+    M.Sidenav.init(document.querySelectorAll('.sidenav'), {});
   }
 
   login() {
