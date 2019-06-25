@@ -1,5 +1,5 @@
 import { AuthService } from './core/auth.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import * as firebase from 'firebase/app';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {Observable} from 'rxjs';
