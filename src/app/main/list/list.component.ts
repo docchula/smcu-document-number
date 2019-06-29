@@ -8,6 +8,7 @@ import {AngularFireAuth} from '@angular/fire/auth';
 import * as M from 'materialize-css';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {AngularFireAuth} from '@angular/fire/auth';
+import {UserProfile} from '../../user-profile';
 
 @Component({
   selector: 'smcu-list',
@@ -29,21 +30,7 @@ export class ListComponent implements OnInit, AfterViewInit {
   statusForm: FormGroup;
   selectedFile: File = null;
   uploadPercent: Observable<number>;
-  user: {
-    displayName: string | null,
-    uid: string | null,
-    email: string | null,
-    fullName: string | null,
-    phone: string | null,
-    canEditStatus: boolean | null
-  } = {
-    displayName: null,
-    uid: null,
-    email: null,
-    fullName: null,
-    phone: null,
-    canEditStatus: false
-  };
+  user: UserProfile;
 
   constructor(
     private route: ActivatedRoute,
@@ -107,14 +94,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.announcement$ = this.afd.object<string>('data/announcement').valueChanges();
     this.afa.authState.pipe(first()).subscribe((authState) => {
       if (authState) {
-        this.afd.object<{
-          displayName: string,
-          uid: string,
-          email: string,
-          fullName: string | null,
-          phone: string | null,
-          canEditStatus: boolean | null
-        }>(`data/users/${authState.uid}/profile`).valueChanges().pipe(first()).subscribe((data) => {
+        this.afd.object<UserProfile>(`data/users/${authState.uid}/profile`).valueChanges().pipe(first()).subscribe((data) => {
           this.user = data;
         });
       }

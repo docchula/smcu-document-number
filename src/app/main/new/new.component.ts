@@ -12,6 +12,7 @@ import {saveAs} from 'file-saver';
 import {ThaiDatePipe} from '../../thai-date.pipe';
 import * as M from 'materialize-css';
 import {AngularFireStorage} from '@angular/fire/storage';
+import {UserProfile} from '../../user-profile';
 
 declare var JSZip: any;
 declare var JSZipUtils: any;
@@ -94,13 +95,7 @@ export class NewComponent implements OnInit, AfterViewChecked {
     });
     this.afa.authState.pipe(first()).subscribe((authState) => {
       if (authState) {
-        this.afd.object<{
-          displayName: string,
-          uid: string,
-          email: string,
-          fullName: string | null,
-          phone: string | null
-        }>(`data/users/${authState.uid}/profile`).valueChanges().pipe(first()).subscribe((data) => {
+        this.afd.object<UserProfile>(`data/users/${authState.uid}/profile`).valueChanges().pipe(first()).subscribe((data) => {
           if (data && data.fullName) {
             this.docForm.patchValue({
               contact_name: data.fullName,
