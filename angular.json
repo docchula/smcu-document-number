@@ -24,7 +24,6 @@
               "node_modules/materialize-css/dist/css/materialize.css"
             ],
             "scripts": [
-              "node_modules/materialize-css/dist/js/materialize.js",
               "node_modules/jszip/dist/jszip.js",
               "node_modules/jszip-utils/dist/jszip-utils.js",
               "node_modules/docxtemplater/js/docxtemplater.js"
