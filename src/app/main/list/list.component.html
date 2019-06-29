@@ -39,15 +39,91 @@
             <a *ngIf="document.filePath" (click)="downloadAttachment(document.filePath)">
               <i class="material-icons">save_alt</i>
             </a>
+            <a *ngIf="user.canEditStatus || user.uid === document.user.profile.uid" (click)="openStatusModal(document)">
+              <i class="material-icons">settings</i>
+            </a>
           </td>
         </tr>
       </tbody>
     </table>
-
-    <div class="fixed-action-btn">
-      <a class="btn-floating btn-large blue" [routerLink]="['new']" id="float-btn">
-        <i class="large material-icons">add</i>
-      </a>
-    </div>
   </div>
+</div>
+
+<div #modalStatus class="modal">
+  <form [formGroup]="statusForm">
+    <div class="modal-content">
+      <h4 *ngIf="focusedDoc">แก้ไขข้อมูลหนังสือ ที่ {{focusedDoc.number}}/{{focusedDoc.$year--543}}</h4>
+      <div *ngIf="user.canEditStatus">
+        <h5>สถานะ</h5>
+        <p>
+          <label>
+            <input name="status" type="radio" formControlName="status" value="ยังไม่ได้รับ"/>
+            <span>ยังไม่ได้รับ</span>
+          </label>
+        </p>
+        <p>
+          <label>
+            <input name="status" type="radio" formControlName="status" value="รอพิจารณา"/>
+            <span>รอพิจารณา</span>
+          </label>
+        </p>
+        <p>
+          <label>
+            <input name="status" type="radio" formControlName="status" value="อนุมัติแล้ว"/>
+            <span>อนุมัติแล้ว (ให้มารับคืน)</span>
+          </label>
+        </p>
+        <p>
+          <label>
+            <input name="status" type="radio" formControlName="status" value="รับทราบ"/>
+            <span>รับทราบ (ไม่ต้องคืน)</span>
+          </label>
+        </p>
+        <p>
+          <label>
+            <input name="status" type="radio" formControlName="status" value="กรุณาแก้ไข"/>
+            <span>กรุณาแก้ไขแล้วส่งใหม่</span>
+          </label>
+        </p>
+        <p>
+          <label>
+            <input name="status" type="radio" formControlName="status" value="ส่งต่อแล้ว"/>
+            <span>ส่งต่อไปยังหน่วยงานที่เกี่ยวข้องแล้ว</span>
+          </label>
+        </p>
+        <p>
+          <label>
+            <input name="status" type="radio" formControlName="status" value="คืนต้นเรื่องแล้ว"/>
+            <span>คืนต้นเรื่องแล้ว</span>
+          </label>
+        </p>
+        <p>[สำหรับฝ่ายกิจการนิสิต] เมื่อแก้ไขสถานะแล้ว ระบบจะแสดงผลบนเว็บไซต์</p>
+        <div class="divider"></div>
+      </div>
+      <div *ngIf="focusedDoc && (user.canEditStatus || user.uid === focusedDoc.user.profile.uid)">
+        <h5>แก้ไขไฟล์แนบ</h5>
+        <div class="row">
+          <div class="col s12 file-field input-field">
+            <div class="btn">
+              <span>File</span>
+              <input type="file" (change)="onFileChange($event)"
+                     accept="application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,image/jpeg,image/png">
+            </div>
+            <div class="file-path-wrapper">
+              <input class="file-path validate" type="text" placeholder="อัพโหลดไฟล์เอกสาร (.docx/.pdf)">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a class="modal-close waves-effect waves-red btn-flat">ยกเลิก</a>
+      <a class="waves-effect waves-green btn-flat" (click)="saveStatus()">บันทึก <span *ngIf="uploadPercent">({{ uploadPercent | async }}%)</span></a>
+    </div>
+  </form>
+</div>
+<div class="fixed-action-btn" #floatBtn>
+  <a class="btn-floating btn-large blue" [routerLink]="['new']">
+    <i class="large material-icons">add</i>
+  </a>
 </div>
