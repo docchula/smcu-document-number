@@ -7,7 +7,6 @@ import {AngularFireStorage} from '@angular/fire/storage';
 import {AngularFireAuth} from '@angular/fire/auth';
 import * as M from 'materialize-css';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {AngularFireAuth} from '@angular/fire/auth';
 import {UserProfile} from '../../user-profile';
 
 @Component({

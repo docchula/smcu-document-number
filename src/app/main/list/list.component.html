@@ -39,7 +39,7 @@
             <a *ngIf="document.filePath" (click)="downloadAttachment(document.filePath)">
               <i class="material-icons">save_alt</i>
             </a>
-            <a *ngIf="user.canEditStatus || user.uid === document.user.profile.uid" (click)="openStatusModal(document)">
+            <a *ngIf="user && (user.canEditStatus || user.uid === document.user.profile.uid)" (click)="openStatusModal(document)">
               <i class="material-icons">settings</i>
             </a>
           </td>
@@ -53,7 +53,7 @@
   <form [formGroup]="statusForm">
     <div class="modal-content">
       <h4 *ngIf="focusedDoc">แก้ไขข้อมูลหนังสือ ที่ {{focusedDoc.number}}/{{focusedDoc.$year--543}}</h4>
-      <div *ngIf="user.canEditStatus">
+      <div *ngIf="user && user.canEditStatus">
         <h5>สถานะ</h5>
         <p>
           <label>
