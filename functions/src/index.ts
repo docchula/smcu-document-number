@@ -21,70 +21,9 @@ const mailTransport = nodemailer.createTransport({
 });
 const APP_NAME = 'ระบบสารบรรณ สพจ';
 
-export const submit = functions.https.onRequest((req, res) => {
-  if (req.method.toLowerCase() !== 'post') {
-    if (req.method.toLowerCase() !== 'options') {
-      res.status(405);
-    } else {
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.status(200);
-    }
-    res.end();
-  } else {
-    const data = req.body;
-
-    // Validate ID Token
-    if (data.idToken) {
-      firebase.auth().verifyIdToken(data.idToken)
-        .then((decoded) => {
-          const name = data.name;
-          const divisionId = data.divisionId;
-          const year = data.year;
-          const category = data.category;
-          const uid = decoded.sub;
-          const filePath = data.filePath;
-          const nextNumberRef = firebase.database().ref(`data/documents/${year}/${category}/nextNumber`);
-          let pushContent: DocumentInfo;
-          nextNumberRef.once('value')
-            .then((_nextNumber) => {
-              let nextNumber = _nextNumber.val();
-              if (!nextNumber) {
-                nextNumber = 1;
-              }
-              return nextNumber;
-            }).then((nextNumber) => {
-            return nextNumberRef.set(nextNumber + 1).then(() => nextNumber);
-          }).then((nextNumber) => {
-            return firebase.database().ref(`data/users/${uid}`).once('value').then((_v) => {
-              const v = _v.val();
-              return firebase.database().ref(`data/divisions/${divisionId}`).once('value').then((_d) => {
-                pushContent = {
-                  number: nextNumber,
-                  name,
-                  user: v,
-                  timestamp: firebase.database.ServerValue.TIMESTAMP,
-                  division: _d.val(),
-                  filePath: filePath
-                };
-                return firebase.database().ref(`data/documents/${year}/${category}/documents`).push(pushContent);
-              });
-            });
-          }).then(() => {
-            res.status(200).send(pushContent);
-            res.end();
-          }).catch(err => console.error(err));
-        })
-        .catch((err) => res.status(401).send(err));
-    } else {
-      res.status(401);
-      res.end();
-    }
-  }
-});
-
 export const notifyDocStatusChange = functions.database.ref('data/documents/{year}/{category}/documents/{key}')
   .onUpdate((change, context) => {
-    const newValue = change.after.val();
+    const newValue: DocumentInfo = change.after.val();
     // Exit when the data is first created or deleted or the document status hasn't been changed.
     if (!change.before.exists() || !change.after.exists() || change.before.val().status === newValue.status) {
       return null;

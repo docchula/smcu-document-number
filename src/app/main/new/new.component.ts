@@ -1,10 +1,8 @@
-import {environment} from '../../../environments/environment';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AfterViewChecked, Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AngularFireDatabase} from '@angular/fire/database';
 import {AngularFireAuth} from '@angular/fire/auth';
-import {HttpClient} from '@angular/common/http';
 import {combineLatest, Observable} from 'rxjs';
 import {finalize, first, map, switchMap} from 'rxjs/operators';
 import * as Docxtemplater from 'docxtemplater';
@@ -14,6 +12,8 @@ import {ThaiDatePipe} from '../../thai-date.pipe';
 import * as M from 'materialize-css';
 import {AngularFireStorage} from '@angular/fire/storage';
 import {UserProfile} from '../../user-profile';
+import * as firebase from 'firebase/app';
+import 'firebase/database';
 
 declare var JSZipUtils: any;
 
@@ -26,12 +26,12 @@ export class NewComponent implements OnInit, AfterViewChecked {
   params$: Observable<any>;
   year$: Observable<any>;
   category$: Observable<any>;
-  divisions$: Observable<{ name: string, value: number }[]>;
+  divisions: { name: string, value: number }[];
   signers: { name: string, title: string, picture_url: string | null }[][] = [[], [], [], []];
   initializedSignerSelect: boolean;
   numberForm: FormGroup;
   docForm: FormGroup;
-  authState: firebase.User;
+  user: UserProfile;
   selectedFile: File = null;
   uploadPercent: Observable<number>;
 
@@ -39,7 +39,6 @@ export class NewComponent implements OnInit, AfterViewChecked {
     private route: ActivatedRoute,
     private router: Router,
     private afd: AngularFireDatabase,
-    private http: HttpClient,
     private afa: AngularFireAuth,
     private storage: AngularFireStorage) {
   }
@@ -63,8 +62,11 @@ export class NewComponent implements OnInit, AfterViewChecked {
     this.category$ = this.params$.pipe(switchMap((params) => {
       return this.afd.object(`data/categories/${params.category}`).valueChanges();
     }));
-    this.divisions$ = this.afd.list('data/divisions').valueChanges()
-      .pipe(map((divisions: any[]) => divisions.filter((division) => division.value !== 0)));
+    this.afd.list('data/divisions').valueChanges()
+      .pipe(map((divisions: any[]) => divisions.filter((division) => division.value !== 0)))
+      .subscribe(divisions => {
+        this.divisions = divisions;
+      });
     [1, 2, 3].forEach(num => {
       this.afd.list<{ name: string, title: string, picture_url: string | null }>(`data/signers/level_${num}`)
         .valueChanges().pipe(first())
@@ -96,20 +98,20 @@ export class NewComponent implements OnInit, AfterViewChecked {
     this.afa.authState.pipe(first()).subscribe((authState) => {
       if (authState) {
         this.afd.object<UserProfile>(`data/users/${authState.uid}/profile`).valueChanges().pipe(first()).subscribe((data) => {
+          this.user = data;
           if (data && data.fullName) {
             this.docForm.patchValue({
               contact_name: data.fullName,
               contact_phone: data.phone
             });
-          } else {
-            if (!data) {
-              this.afd.database.ref(`data/users/${authState.uid}/profile`).set({
-                displayName: authState.displayName,
-                uid: authState.uid,
-                email: authState.email
-              });
-            }
-            this.authState = authState;
+          } else if (!data) {
+            const newUserProfile = {
+              displayName: authState.displayName,
+              uid: authState.uid,
+              email: authState.email
+            };
+            this.afd.database.ref(`data/users/${authState.uid}/profile`).set(newUserProfile);
+            this.user = newUserProfile;
           }
         });
       }
@@ -138,7 +140,7 @@ export class NewComponent implements OnInit, AfterViewChecked {
   }
 
   submitNumber() {
-    if (this.numberForm.valid) {
+    if (this.numberForm.valid && this.user && this.divisions) {
       if (!this.selectedFile) {
         M.toast({html: 'กรุณาเลือกไฟล์'});
         return;
@@ -154,22 +156,34 @@ export class NewComponent implements OnInit, AfterViewChecked {
           this.uploadPercent = task.percentageChanges();
           // get notified when the download URL is available
           task.snapshotChanges().pipe(
-            finalize(() => {
+            finalize(async () => {
               // this.downloadURL = fileRef.getDownloadURL()
 
-              this.http.post(`${environment.baseUrl}/submit`, {
+              // Retrieve next available number
+              const nextNumberRef = this.afd.object<number>(`data/documents/${year.christian_year}/${category.value}/nextNumber`);
+              let nextNumber = await nextNumberRef.valueChanges().pipe(first()).toPromise();
+              if (!nextNumber) {
+                nextNumber = 1;
+              }
+
+              // Update next available number setting
+              nextNumberRef.set(nextNumber + 1);
+
+              // Get division info
+              const division = this.divisions.find(div => div.value === this.numberForm.value.divisionId);
+
+              // Create new document
+              this.afd.list(`data/documents/${year.christian_year}/${category.value}/documents`).push({
+                number: nextNumber,
                 name: this.numberForm.value.name,
-                divisionId: this.numberForm.value.divisionId,
-                year: year.christian_year,
-                category: category.value,
-                idToken: idToken,
+                user: {profile: this.user},
+                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                division: division,
                 filePath: filePath
-              }).subscribe((res) => {
-                if (res) {
-                  // Created document
-                  M.toast({html: 'บันทึกข้อมูลเรียบร้อย'});
-                  this.router.navigate(['..'], {relativeTo: this.route});
-                }
+              }).then(() => {
+                // Created!
+                M.toast({html: 'บันทึกข้อมูลเรียบร้อย'});
+                this.router.navigate(['..']);
               });
             })).subscribe();
         });
@@ -235,8 +249,8 @@ export class NewComponent implements OnInit, AfterViewChecked {
         saveAs(out, 'output.docx');
       });
 
-      if (this.authState) {
-        this.afd.database.ref(`data/users/${this.authState.uid}/profile`).update({
+      if (this.user.fullName !== this.docForm.value.contact_name || this.user.phone !== this.docForm.value.contact_phone) {
+        this.afd.database.ref(`data/users/${this.user.uid}/profile`).update({
           fullName: this.docForm.value.contact_name,
           phone: this.docForm.value.contact_phone
         });
