@@ -30,7 +30,7 @@
     "jszip-utils": "0.1.0",
     "materialize-css": "1.0.0",
     "moment": "2.24.0",
-    "moment-timezone": "0.5.25",
+    "moment-timezone": "0.5.26",
     "rxjs": "6.5.2",
     "tslib": "1.10.0",
     "zone.js": "0.9.1"
