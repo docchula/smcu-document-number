@@ -76,7 +76,9 @@ export class NewComponent implements OnInit, AfterViewChecked {
     });
     this.numberForm = new FormGroup({
       name: new FormControl('', Validators.required),
-      divisionId: new FormControl(1, Validators.required)
+      divisionId: new FormControl(1, Validators.required),
+      multipleDoc: new FormControl(false),
+      numberOfDoc: new FormControl(1)
     });
     this.docForm = new FormGroup({
       name: new FormControl('', Validators.required),
@@ -140,6 +142,10 @@ export class NewComponent implements OnInit, AfterViewChecked {
   }
 
   submitNumber() {
+    const numberOfDoc = this.numberForm.value.numberOfDoc;
+    if (!this.numberForm.value.multipleDoc) {
+      this.numberForm.patchValue({numberOfDoc: 1});
+    }
     if (this.numberForm.valid && this.user && this.divisions) {
       if (!this.selectedFile) {
         M.toast({html: 'กรุณาเลือกไฟล์'});
@@ -147,46 +153,45 @@ export class NewComponent implements OnInit, AfterViewChecked {
       }
       this.numberForm.disable();
       combineLatest([this.year$, this.category$]).pipe(first()).subscribe(([year, category]) => {
-        this.afa.idToken.pipe(first()).subscribe((idToken) => {
-          // Upload file
-          const filePath = 'document/' + year.christian_year + '/' + Date.now() + '-' + Math.round(Math.random() * 100);
-          const task = this.storage.upload(filePath, this.selectedFile);
+        // Upload file
+        const filePath = 'document/' + year.christian_year + '/' + Date.now() + '-' + Math.round(Math.random() * 100);
+        const task = this.storage.upload(filePath, this.selectedFile);
 
-          // observe percentage changes
-          this.uploadPercent = task.percentageChanges();
-          // get notified when the download URL is available
-          task.snapshotChanges().pipe(
-            finalize(async () => {
-              // this.downloadURL = fileRef.getDownloadURL()
+        // observe percentage changes
+        this.uploadPercent = task.percentageChanges();
+        // get notified when the download URL is available
+        task.snapshotChanges().pipe(
+          finalize(async () => {
+            // this.downloadURL = fileRef.getDownloadURL()
 
-              // Retrieve next available number
-              const nextNumberRef = this.afd.object<number>(`data/documents/${year.christian_year}/${category.value}/nextNumber`);
-              let nextNumber = await nextNumberRef.valueChanges().pipe(first()).toPromise();
-              if (!nextNumber) {
-                nextNumber = 1;
-              }
+            // Retrieve next available number
+            const nextNumberRef = this.afd.object<number>(`data/documents/${year.christian_year}/${category.value}/nextNumber`);
+            let nextNumber = await nextNumberRef.valueChanges().pipe(first()).toPromise();
+            if (!nextNumber) {
+              nextNumber = 1;
+            }
 
-              // Update next available number setting
-              nextNumberRef.set(nextNumber + 1);
+            // Update next available number setting
+            nextNumberRef.set(nextNumber - -numberOfDoc);
 
-              // Get division info
-              const division = this.divisions.find(div => div.value === this.numberForm.value.divisionId);
+            // Get division info (plus sign: convert to number)
+            const division = this.divisions.find(div => +div.value === +this.numberForm.value.divisionId);
 
-              // Create new document
-              this.afd.list(`data/documents/${year.christian_year}/${category.value}/documents`).push({
-                number: nextNumber,
-                name: this.numberForm.value.name,
-                user: {profile: this.user},
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                division: division,
-                filePath: filePath
-              }).then(() => {
-                // Created!
-                M.toast({html: 'บันทึกข้อมูลเรียบร้อย'});
-                this.router.navigate(['..']);
-              });
-            })).subscribe();
-        });
+            // Create new document
+            this.afd.list(`data/documents/${year.christian_year}/${category.value}/documents`).push({
+              number: nextNumber,
+              name: (numberOfDoc > 1 ? `[${numberOfDoc} ฉบับ; ${nextNumber}-${nextNumber - -numberOfDoc}] ` : '')
+                + this.numberForm.value.name,
+              user: {profile: this.user},
+              timestamp: firebase.database.ServerValue.TIMESTAMP,
+              division: division,
+              filePath: filePath
+            }).then(() => {
+              // Created!
+              M.toast({html: 'บันทึกข้อมูลเรียบร้อย'});
+              this.router.navigate(['..']);
+            });
+          })).subscribe();
       });
     }
   }

@@ -44,6 +44,23 @@
                 </div>
                 <div class="row">
                   <div class="col s12">
+                    <p>
+                      <label>
+                        <input type="checkbox" formControlName="multipleDoc"/>
+                        <span>ต้องการออกหนังสือในเรื่องเดียวกันนี้ไปยังผู้รับหลายคน (ออกหลายเลขที่)</span>
+                      </label>
+                    </p>
+                  </div>
+                </div>
+                <div class="row" *ngIf="numberForm.value.multipleDoc">
+                  <div class="input-field col s12">
+                    <input id="number" type="text" class="validate" formControlName="numberOfDoc">
+                    <label for="number">จำนวนหนังสือ</label>
+                    <span class="helper-text">โปรดขอเลขหนังสือให้พอดี หนังสือที่ออกเลขพร้อมกันต้องส่งพร้อมกันในวันที่เดียวกัน</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col s12">
                     <button class="btn waves-effect waves-light" type="submit" [disabled]="numberForm.disabled">
                       สร้างเลขที่หนังสือใหม่ <span *ngIf="uploadPercent">({{ uploadPercent | async }}%)</span>
                       <i class="material-icons right">send</i>
@@ -182,12 +199,6 @@
                   </div>
                 </div>
               </form>
-            </div>
-          </li>
-          <li>
-            <div class="collapsible-header"><i class="material-icons">playlist_play</i>ฉันต้องการออกเลขที่หนังสือในเรื่องเดียวกันจำนวนมาก</div>
-            <div class="collapsible-body">
-              <span>โปรดติดต่อฝ่ายเทคโนโลยีสารสนเทศ สโมสรนิสิตฯ</span>
             </div>
           </li>
         </ul>
