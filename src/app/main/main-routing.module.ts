@@ -1,6 +1,5 @@
-import { NewComponent } from './new/new.component';
 import { ListComponent } from './list/list.component';
-import { UserGuard } from './../user.guard';
+import { UserGuard } from '../user.guard';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -23,7 +22,7 @@ const routes: Routes = [
       },
       {
         path: ':year/:category/new',
-        component: NewComponent
+        loadChildren: () => import('./new/new-component.module').then(mod => mod.NewComponentModule),
       }
     ]
   }
