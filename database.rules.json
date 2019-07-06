@@ -1,15 +1,21 @@
 {
   "rules": {
     ".read": "auth != null && auth.token.email.endsWith('@docchula.com')",
-    ".write": "auth != null && auth.token.email.endsWith('@docchula.com')",
+    ".write": "false",
     "data": {
       "documents": {
+        ".write": "auth != null && auth.token.email.endsWith('@docchula.com')",
         "$year": {
           "$category": {
             "documents": {
               ".indexOn": "number"
             }
           }
+        }
+      },
+      "users": {
+        "$uid": {
+          ".write": "auth != null && auth.token.email.endsWith('@docchula.com') && auth.uid == $uid"
         }
       }
     }
