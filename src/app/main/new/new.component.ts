@@ -8,13 +8,13 @@ import {HttpClient} from '@angular/common/http';
 import {combineLatest, Observable} from 'rxjs';
 import {finalize, first, map, switchMap} from 'rxjs/operators';
 import * as Docxtemplater from 'docxtemplater';
+import * as JSZip from 'JSZip';
 import {saveAs} from 'file-saver';
 import {ThaiDatePipe} from '../../thai-date.pipe';
 import * as M from 'materialize-css';
 import {AngularFireStorage} from '@angular/fire/storage';
 import {UserProfile} from '../../user-profile';
 
-declare var JSZip: any;
 declare var JSZipUtils: any;
 
 @Component({
