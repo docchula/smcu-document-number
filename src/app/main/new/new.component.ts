@@ -14,6 +14,7 @@ import {AngularFireStorage} from '@angular/fire/storage';
 import {UserProfile} from '../../user-profile';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
+import {mimeToExtension} from '../../../mime-to-extension';
 
 declare var JSZipUtils: any;
 
@@ -153,8 +154,16 @@ export class NewComponent implements OnInit, AfterViewChecked {
       }
       this.numberForm.disable();
       combineLatest([this.year$, this.category$]).pipe(first()).subscribe(([year, category]) => {
+        // Determine file name
+        let filePath = 'document/' + year.christian_year + '/'
+          + Date.now()
+          + '-' + Math.round(Math.random() * 100)
+          + '-' + this.user.email.replace('@docchula.com', '');
+        if (mimeToExtension.hasOwnProperty(this.selectedFile.type)) {
+          filePath += '.' + mimeToExtension[this.selectedFile.type];
+        }
+
         // Upload file
-        const filePath = 'document/' + year.christian_year + '/' + Date.now() + '-' + Math.round(Math.random() * 100);
         const task = this.storage.upload(filePath, this.selectedFile);
 
         // observe percentage changes
