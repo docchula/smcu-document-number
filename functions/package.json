@@ -22,7 +22,7 @@
     "tslint": "5.18.0",
     "typescript": "3.2.4",
     "@types/node": "12.6.8",
-    "@types/nodemailer": "6.2.0"
+    "@types/nodemailer": "6.2.1"
   },
   "private": true
 }
