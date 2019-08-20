@@ -19,7 +19,7 @@
     "nodemailer": "6.3.0"
   },
   "devDependencies": {
-    "tslint": "5.18.0",
+    "tslint": "5.19.0",
     "typescript": "3.5.3",
     "@types/node": "12.7.2",
     "@types/nodemailer": "6.2.1"
