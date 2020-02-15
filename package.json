@@ -39,7 +39,7 @@
     "@angular/cli": "9.0.1",
     "@angular/compiler-cli": "9.0.0",
     "@angular/language-service": "9.0.0",
-    "@types/jasmine": "3.5.3",
+    "@types/jasmine": "3.5.4",
     "@types/jasminewd2": "2.0.8",
     "@types/jszip": "3.1.7",
     "@types/materialize-css": "1.0.7",
