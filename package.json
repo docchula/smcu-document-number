@@ -21,7 +21,7 @@
     "@angular/platform-browser": "9.0.4",
     "@angular/platform-browser-dynamic": "9.0.4",
     "@angular/router": "9.0.4",
-    "docxtemplater": "3.16.11",
+    "docxtemplater": "3.17.2",
     "file-saver": "2.0.2",
     "firebase": "7.9.3",
     "font-awesome": "4.7.0",
