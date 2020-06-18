@@ -56,7 +56,7 @@
           <td>{{ document.timestamp | date: 'd MMMM y, HH:mm' }}</td>
           <td>
             {{ document.status || '-' }}
-            <a *ngIf="document.filePath" (click)="downloadAttachment(document.filePath)">
+            <a *ngIf="(user$ | async) && ((user$ | async).canEditStatus || (user$ | async).uid === document.user.profile.uid) && document.filePath" (click)="downloadAttachment(document.filePath)">
               <i class="material-icons">save_alt</i>
             </a>
             <a
