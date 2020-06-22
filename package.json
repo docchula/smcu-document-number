@@ -23,7 +23,7 @@
     "@angular/router": "9.1.11",
     "docxtemplater": "3.17.9",
     "file-saver": "2.0.2",
-    "firebase": "7.15.3",
+    "firebase": "7.15.4",
     "font-awesome": "4.7.0",
     "jszip-utils": "0.1.0",
     "materialize-css": "1.0.0",
