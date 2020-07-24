@@ -21,7 +21,7 @@
   "devDependencies": {
     "tslint": "6.1.2",
     "typescript": "3.9.7",
-    "@types/node": "12.12.52",
+    "@types/node": "12.12.53",
     "@types/nodemailer": "6.4.0"
   },
   "private": true
