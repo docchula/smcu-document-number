@@ -4,7 +4,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as Docxtemplater from 'docxtemplater';
+import Docxtemplater from 'docxtemplater';
 import { saveAs } from 'file-saver';
 import * as firebase from 'firebase/app';
 import 'firebase/database';
