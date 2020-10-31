@@ -6,7 +6,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import Docxtemplater from 'docxtemplater';
 import { saveAs } from 'file-saver';
-import * as firebase from 'firebase/app';
+import firebase from 'firebase/app';
 import 'firebase/database';
 import * as PizZip from 'pizzip';
 import * as M from 'materialize-css';
