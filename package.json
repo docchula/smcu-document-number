@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "10.2.3",
     "@angular/router": "10.2.3",
     "docxtemplater": "3.19.7",
-    "file-saver": "2.0.4",
+    "file-saver": "2.0.5",
     "firebase": "8.0.2",
     "font-awesome": "4.7.0",
     "jszip-utils": "0.1.0",
