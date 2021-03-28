@@ -1,5 +1,5 @@
 <div *ngIf="announcement$ | async as announcement" class="announcement yellow lighten-4">
-  {{ announcement }}
+  <div [innerHTML]="announcement | dompurify"></div>
 </div>
 <button
   type="button"
