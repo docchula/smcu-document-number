@@ -23,7 +23,7 @@
     "@angular/router": "11.2.14",
     "@tinkoff/ng-dompurify": "3.0.0",
     "docxtemplater": "3.21.2",
-    "dompurify": "2.2.8",
+    "dompurify": "2.2.9",
     "file-saver": "2.0.5",
     "firebase": "8.6.3",
     "font-awesome": "4.7.0",
