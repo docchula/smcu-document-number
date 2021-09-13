@@ -26,8 +26,8 @@
           <th>ที่</th>
           <th>หัวเรื่อง</th>
           <th>หน่วยงาน</th>
-          <th>ผู้ขอ</th>
-          <th>เวลา</th>
+          <th *ngIf="(user$ | async) && (user$ | async).canEditStatus">ผู้ขอ</th>
+          <th>วันที่</th>
           <th>สถานะ</th>
         </tr>
       </thead>
@@ -49,11 +49,11 @@
           </ng-template>
           <td>{{ document.name }}</td>
           <td>{{ document.division.name }}</td>
-          <td>
+          <td *ngIf="(user$ | async) && (user$ | async).canEditStatus">
             {{ document.user ? document.user.profile.displayName : '-' }}
-            <small *ngIf="document.user && (user$ | async) && (user$ | async).canEditStatus">{{ document.user.profile.email }}</small>
+            <small *ngIf="document.user">{{ document.user.profile.email }}</small>
           </td>
-          <td>{{ document.timestamp | date: 'd MMMM y, HH:mm' }}</td>
+          <td>{{ document.timestamp | date: 'd MMM y' }}</td>
           <td>
             {{ document.status || '-' }}
             <a *ngIf="(user$ | async) && ((user$ | async).canEditStatus || (user$ | async).uid === document.user.profile.uid) && document.filePath" (click)="downloadAttachment(document.filePath)">
