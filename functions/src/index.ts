@@ -1,9 +1,9 @@
 import * as functions from 'firebase-functions';
-import * as firebase from 'firebase-admin';
+import { initializeApp } from 'firebase-admin/app';
 import * as nodemailer from 'nodemailer';
 import {DocumentInfo} from './data-type';
 
-firebase.initializeApp(functions.config().firebase);
+initializeApp(functions.config().firebase);
 
 // Configure the email transport using the default SMTP transport and a GMail account.
 // For Gmail, enable these:
@@ -33,7 +33,7 @@ export const notifyDocStatusChange = functions.database.ref('data/documents/{yea
     // writing to the Firebase Realtime Database.
     // Setting an "uppercase" sibling in the Realtime Database returns a Promise.
     return sendDocStatusUpdateEmail(
-      newValue.user.profile.email, newValue.user.profile.displayName, newValue.number + ' ' + newValue.name, newValue.status
+      newValue.user.profile.email, newValue.user.profile.displayName, newValue.number + ' ' + newValue.name, newValue.status!
     );
   });
 
