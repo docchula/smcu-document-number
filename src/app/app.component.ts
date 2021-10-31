@@ -1,7 +1,7 @@
 import { AuthService } from './core/auth.service';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import firebase from 'firebase/app';
-import { AngularFireAuth } from '@angular/fire/auth';
+import firebase from 'firebase/compat/app';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Observable } from 'rxjs';
 import * as M from 'materialize-css';
 
