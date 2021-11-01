@@ -9,9 +9,6 @@ import { NoUserGuard } from './no-user.guard';
 import { HomeComponent } from './home/home.component';
 import { ThaiDatePipe } from './thai-date.pipe';
 
-import undefined from 'firebase/compat/database';
-import undefined from 'firebase/compat/storage';
-
 @NgModule({
   declarations: [AppComponent, HomeComponent, ThaiDatePipe],
   imports: [BrowserModule, AppRoutingModule, CoreModule],

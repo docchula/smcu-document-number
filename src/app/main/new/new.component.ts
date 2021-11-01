@@ -7,7 +7,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Docxtemplater from 'docxtemplater';
 import { saveAs } from 'file-saver';
 import firebase from 'firebase/compat/app';
-import undefined from 'firebase/compat/database';
 import * as PizZip from 'pizzip';
 import * as M from 'materialize-css';
 import { combineLatest, Observable, of } from 'rxjs';
