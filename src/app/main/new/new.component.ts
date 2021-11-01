@@ -9,8 +9,8 @@ import { saveAs } from 'file-saver';
 import firebase from 'firebase/compat/app';
 import * as PizZip from 'pizzip';
 import * as M from 'materialize-css';
-import { combineLatest, Observable, of } from 'rxjs';
-import { concat, finalize, first, ignoreElements, map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { combineLatest, concat, Observable, of } from 'rxjs';
+import { finalize, first, ignoreElements, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { mimeToExtension } from '../../../mime-to-extension';
 import { ThaiDatePipe } from '../../thai-date.pipe';
 import { UserProfile } from '../../user-profile';
@@ -56,24 +56,23 @@ export class NewComponent implements OnInit, AfterViewInit {
         return [s.get('year'), s.get('category')];
       }),
       switchMap(([year, category]) => {
-        return of([year, category]).pipe(
-          concat(
-            this.afd
-              .object(`data/years/${year}`)
-              .valueChanges()
-              .pipe(
-                tap(yearData => {
-                  if (!yearData) {
-                    const yearNum = parseInt(year, 10);
-                    this.afd.database.ref(`data/years/${year}`).set({
-                      christian_year: yearNum,
-                      buddhist_year: yearNum + 543
-                    });
-                  }
-                })
-              )
-              .pipe(ignoreElements())
-          )
+        return concat(
+          of([year, category]),
+          this.afd
+            .object(`data/years/${year}`)
+            .valueChanges()
+            .pipe(
+              tap(yearData => {
+                if (!yearData) {
+                  const yearNum = parseInt(year, 10);
+                  this.afd.database.ref(`data/years/${year}`).set({
+                    christian_year: yearNum,
+                    buddhist_year: yearNum + 543
+                  });
+                }
+              })
+            )
+            .pipe(ignoreElements())
         ) as Observable<[string, string]>;
       })
     );
