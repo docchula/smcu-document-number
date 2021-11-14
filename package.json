@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "12.2.12",
     "@angular/router": "12.2.12",
     "@tinkoff/ng-dompurify": "3.0.0",
-    "docxtemplater": "3.26.0",
+    "docxtemplater": "3.26.4",
     "dompurify": "2.3.3",
     "file-saver": "2.0.5",
     "firebase": "9.2.0",
