@@ -25,7 +25,7 @@ export class NoUserGuard implements CanActivate, CanLoad {
         if (!authState) {
           return true;
         } else {
-          this.router.navigate(['/', 'main']);
+          this.router.navigate(['/', 'main', new Date().getFullYear(), 'normal']);
           return false;
         }
       })
